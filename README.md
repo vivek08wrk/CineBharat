@@ -216,7 +216,7 @@ This project is licensed under the ISC License.
 
 ## 📞 Support
 
-For support, email your-email@example.com or open an issue in the repository.
+For support, email vivekrawat08wrk@gmail.com or open an issue in the repository.
 
 ---
 
