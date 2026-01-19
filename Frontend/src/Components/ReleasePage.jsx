@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { releasesStyles } from "../assets/dummyStyles";
 
 const PLACEHOLDER_IMG = "https://via.placeholder.com/400x600?text=No+Image";
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cinebharat-backend.onrender.com";
 
 // to get the images from uploads folder
 

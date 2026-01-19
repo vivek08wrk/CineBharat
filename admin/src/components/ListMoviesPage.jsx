@@ -3,7 +3,7 @@ import { styles5, customStyles } from "../assets/dummyStyles";
 import axios from "axios";
 import { Calendar, Clock, Film, Play, PlayIcon, Search, Star, Ticket, X } from "lucide-react";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cinebharat-backend.onrender.com";
 function getImageUrl(maybe) {
   // Convert filename, uploads/filename, or partial to a full uploads URL.
   if (!maybe) return null;

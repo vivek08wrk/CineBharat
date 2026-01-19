@@ -9,7 +9,7 @@ import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { Clapperboard, Clock, Film, ImageIcon, Play, Plus, Star, Upload as UploadIcon, Users, X  } from "lucide-react";
 
-const API_HOST = "http://localhost:5000";
+const API_HOST = "https://cinebharat-backend.onrender.com";
 const AddPage = () => {
   // form state
   const [movieName, setMovieName] = useState("");

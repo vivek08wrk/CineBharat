@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cinebharat-backend.onrender.com";
 const PLACEHOLDER_THUMB =
   "https://via.placeholder.com/800x450?text=No+Thumbnail";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { styles3, fontStyles2 } from "../assets/dummyStyles";
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cinebharat-backend.onrender.com";
 
 // format INR
 const fmtINR = (num) =>

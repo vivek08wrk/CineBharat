@@ -30,7 +30,7 @@ const VerifyPaymentPage = () => {
 
       try {
         setStatusMsg("Confirming payment with server.");
-        const API_BASE = "http://localhost:5000";
+        const API_BASE = "https://cinebharat-backend.onrender.com";
         const res = await axios.get(
           `${API_BASE}/api/bookings/confirm-payment`,
           {

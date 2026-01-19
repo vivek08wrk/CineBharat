@@ -17,7 +17,7 @@ import {
 
 import axios from "axios";
 
-const API_BASE = "http://localhost:5000/api/auth";
+const API_BASE = "https://cinebharat-backend.onrender.com/api/auth";
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",

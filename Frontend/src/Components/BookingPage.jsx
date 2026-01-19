@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronDown, Clock, Film, MapPin, QrCode, X } from "lucide-react";
 
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = "https://cinebharat-backend.onrender.com";
 
 function getStoredToken() {
   return (
