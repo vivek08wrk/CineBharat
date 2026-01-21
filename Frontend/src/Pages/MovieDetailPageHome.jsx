@@ -132,10 +132,12 @@ const formatTimeInTZ = (dateLike, timeZone = "Asia/Kolkata") => {
 function getImageUrl(candidate) {
   if (!candidate || typeof candidate !== "string") return null;
   const s = candidate.trim();
-  if (!s) return null;  // Replace any localhost URLs with production backend
-  if (s.includes(\"localhost:5000\")) {
-    return s.replace(/http:\\/\\/localhost:5000/g, API_BASE);
-  }  if (s.startsWith("http://") || s.startsWith("https://")) return s;
+  if (!s) return null;
+  // Replace any localhost URLs with production backend
+  if (s.includes("localhost:5000")) {
+    return s.replace(/http:\/\/localhost:5000/g, API_BASE);
+  }
+  if (s.startsWith("http://") || s.startsWith("https://")) return s;
   const cleaned = s.replace(/^uploads\//, "");
   return `${API_BASE}/uploads/${cleaned}`;
 }
