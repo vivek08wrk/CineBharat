@@ -10,9 +10,16 @@ const PLACEHOLDER = "https://via.placeholder.com/400x600?text=No+Poster";
 const getUploadUrl = (maybe) => {
   if (!maybe) return null;
   if (typeof maybe !== "string") return null;
+  
   // Replace any localhost URLs with production backend
-  const cleaned = String(maybe).replace(/https?:\/\/localhost:5000/gi, API_BASE);
-  if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) return cleaned;
+  let cleaned = String(maybe).replace(/https?:\/\/localhost:5000/gi, API_BASE);
+  
+  // If it's already a full URL (after replacement), return it
+  if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) {
+    return cleaned;
+  }
+  
+  // Otherwise, it's a filename - build the full URL
   return `${API_BASE}/uploads/${cleaned.replace(/^uploads\//, "")}`;
 };
 
