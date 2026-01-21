@@ -1,3 +1,4 @@
+// CineBharat - Movie Booking Platform
 import Home from "./Pages/Home";
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
