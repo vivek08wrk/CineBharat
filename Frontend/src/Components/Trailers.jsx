@@ -19,8 +19,10 @@ const getUploadUrl = (input) => {
   if (!input) return null;
 
   // Case 1: already a full URL
-  if (typeof input === "string") {
-    if (input.startsWith("http://") || input.startsWith("https://"))
+  if (typeof input === "string") {    // Replace any localhost URLs with production backend
+    if (input.includes(\"localhost:5000\")) {
+      return input.replace(/http:\\/\\/localhost:5000/g, API_BASE);
+    }    if (input.startsWith("http://") || input.startsWith("https://"))
       return input;
     // filename only (like "abc.jpg")
     return `${API_BASE}/uploads/${input}`;

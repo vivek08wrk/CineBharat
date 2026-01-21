@@ -8,8 +8,10 @@ const API_BASE = "https://cinebharat-backend.onrender.com";
 
 const getUploadUrl = (maybeFilenameOrUrl) => {
   if (!maybeFilenameOrUrl) return null;
-  if (typeof maybeFilenameOrUrl !== "string") return null;
-  if (
+  if (typeof maybeFilenameOrUrl !== "string") return null;  // Replace any localhost URLs with production backend
+  if (maybeFilenameOrUrl.includes(\"localhost:5000\")) {
+    return maybeFilenameOrUrl.replace(/http:\\/\\/localhost:5000/g, API_BASE);
+  }  if (
     maybeFilenameOrUrl.startsWith("http://") ||
     maybeFilenameOrUrl.startsWith("https://")
   )
