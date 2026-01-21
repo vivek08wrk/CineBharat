@@ -15,6 +15,7 @@ import axios from "axios";
 const API_BASE = "https://cinebharat-backend.onrender.com/api/auth";
 
 const LoginPage = () => {
+  // Updated API endpoint
   const [formData, setFormData] = useState({
     email: "",
     password: "",
