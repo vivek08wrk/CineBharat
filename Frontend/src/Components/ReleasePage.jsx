@@ -10,16 +10,10 @@ const getUploadUrl = (maybeFilenameOrUrl) => {
   if (!maybeFilenameOrUrl) return null;
   if (typeof maybeFilenameOrUrl !== "string") return null;
   // Replace any localhost URLs with production backend
-  if (maybeFilenameOrUrl.includes("localhost:5000")) {
-    return maybeFilenameOrUrl.replace(/http:\/\/localhost:5000/g, API_BASE);
-  }
-  if (
-    maybeFilenameOrUrl.startsWith("http://") ||
-    maybeFilenameOrUrl.startsWith("https://")
-  )
-    return maybeFilenameOrUrl;
+  const cleaned = String(maybeFilenameOrUrl).replace(/https?:\/\/localhost:5000/gi, API_BASE);
+  if (cleaned.startsWith("http://") || cleaned.startsWith("https://")) return cleaned;
   // assume it's a filename saved by multer
-  return `${API_BASE}/uploads/${maybeFilenameOrUrl.replace(/^uploads\//, "")}`;
+  return `${API_BASE}/uploads/${cleaned.replace(/^uploads\//, "")}`;
 };
 
 //  map our movies coming from the server side...
