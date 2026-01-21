@@ -31,6 +31,19 @@ app.get("/", (req, res) => {
   res.send("API WORKING");
 });
 
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "OK",
+    message: "CineBharat Backend is running",
+    timestamp: new Date().toISOString(),
+    routes: {
+      auth: "/api/auth (login, register)",
+      movies: "/api/movies",
+      bookings: "/api/bookings"
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server Started on http://localhost:${port}`);
 });
