@@ -1,7 +1,7 @@
 import Home from "./Pages/Home";
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-// CineBharat - Production Ready
+
 import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import Movie from "./Pages/Movie";
