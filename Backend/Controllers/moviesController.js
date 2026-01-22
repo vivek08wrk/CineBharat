@@ -7,11 +7,15 @@ import fs from "fs";
 const API_BASE = process.env.API_BASE || "http://localhost:5000";
 
 /* ---------------------- small helpers ---------------------- */
-// Builds a full upload URL from a filename or returns null if invalid
-// Used only for READ operations (when sending data to clients)
+// Builds a full upload URL from a filename or returns the URL as-is if already absolute
+// Used for READ operations (when sending data to clients)
 const getUploadUrl = (val) => {
   if (!val) return null;
-  if (typeof val === "string" && /^(https?:\/\/)/.test(val)) return val;
+  if (typeof val === "string") {
+    // If it's already a full URL (Cloudinary or other CDN), return as-is
+    if (/^https?:\/\//.test(val)) return val;
+  }
+  // Otherwise treat as local filename and construct URL
   const cleaned = String(val).replace(/^uploads\//, "");
   if (!cleaned) return null;
   return `${API_BASE}/uploads/${cleaned}`;
@@ -155,16 +159,16 @@ export async function createMovie(req, res) {
   try {
     const body = req.body || {};
 
-    // Store only filenames in database (not full URLs)
-    // The getUploadUrl function will construct full URLs when reading
-    const posterUrl = req.files?.poster?.[0]?.filename
-      ? req.files.poster[0].filename
+    // With Cloudinary, files have a 'path' property containing the full URL
+    // Store the full Cloudinary URL directly (it's permanent and CDN-backed)
+    const posterUrl = req.files?.poster?.[0]?.path
+      ? req.files.poster[0].path
       : body.poster || null;
-    const trailerUrl = req.files?.trailerUrl?.[0]?.filename
-      ? req.files.trailerUrl[0].filename
+    const trailerUrl = req.files?.trailerUrl?.[0]?.path
+      ? req.files.trailerUrl[0].path
       : body.trailerUrl || null;
-    const videoUrl = req.files?.videoUrl?.[0]?.filename
-      ? req.files.videoUrl[0].filename
+    const videoUrl = req.files?.videoUrl?.[0]?.path
+      ? req.files.videoUrl[0].path
       : body.videoUrl || null;
 
     const categories =
@@ -188,12 +192,14 @@ export async function createMovie(req, res) {
     const attachFiles = (
       filesArrName,
       targetArr,
-      toFilename = (f) => f  // Store only filename, not full URL
+      toFilename = (f) => f  // For Cloudinary, 'path' contains the full URL
     ) => {
       if (!req.files?.[filesArrName]) return;
       req.files[filesArrName].forEach((file, idx) => {
-        if (targetArr[idx]) targetArr[idx].file = toFilename(file.filename);
-        else targetArr[idx] = { name: "", file: toFilename(file.filename) };
+        // Cloudinary files have 'path' property with full URL
+        const fileUrl = file.path || file.filename;
+        if (targetArr[idx]) targetArr[idx].file = fileUrl;
+        else targetArr[idx] = { name: "", file: fileUrl };
       });
     };
     attachFiles("castFiles", cast);
@@ -202,7 +208,9 @@ export async function createMovie(req, res) {
 
     // latest trailer
     const latestTrailerBody = safeParseJSON(body.latestTrailer) || {};
-    if (req.files?.ltThumbnail?.[0]?.filename)
+    if (req.files?.ltThumbnail?.[0]?.path)
+      latestTrailerBody.thumbnail = req.files.ltThumbnail[0].path;
+    else if (req.files?.ltThumbnail?.[0]?.filename)
       latestTrailerBody.thumbnail = req.files.ltThumbnail[0].filename;
     else if (body.ltThumbnail) {
       const fn = extractFilenameFromUrl(body.ltThumbnail);
@@ -219,10 +227,10 @@ export async function createMovie(req, res) {
     const attachLtFiles = (fieldName, arrName) => {
       if (!req.files?.[fieldName]) return;
       req.files[fieldName].forEach((file, idx) => {
-        const filename = file.filename;
+        const fileUrl = file.path || file.filename;
         if (latestTrailerBody[arrName][idx])
-          latestTrailerBody[arrName][idx].file = filename;
-        else latestTrailerBody[arrName][idx] = { name: "", file: filename };
+          latestTrailerBody[arrName][idx].file = fileUrl;
+        else latestTrailerBody[arrName][idx] = { name: "", file: fileUrl };
       });
     };
     attachLtFiles("ltDirectorFiles", "directors");
