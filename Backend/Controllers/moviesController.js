@@ -3,10 +3,12 @@ import Movie from "../Models/movieModel.js";
 import path from "path";
 import fs from "fs";
 
-const API_BASE = "http://localhost:5000";
+// Use environment variable for production, fallback to localhost for local dev
+const API_BASE = process.env.API_BASE || "http://localhost:5000";
 
 /* ---------------------- small helpers ---------------------- */
 // Builds a full upload URL from a filename or returns null if invalid
+// Used only for READ operations (when sending data to clients)
 const getUploadUrl = (val) => {
   if (!val) return null;
   if (typeof val === "string" && /^(https?:\/\/)/.test(val)) return val;
@@ -153,15 +155,16 @@ export async function createMovie(req, res) {
   try {
     const body = req.body || {};
 
-    //createMovie
+    // Store only filenames in database (not full URLs)
+    // The getUploadUrl function will construct full URLs when reading
     const posterUrl = req.files?.poster?.[0]?.filename
-      ? getUploadUrl(req.files.poster[0].filename)
+      ? req.files.poster[0].filename
       : body.poster || null;
     const trailerUrl = req.files?.trailerUrl?.[0]?.filename
-      ? getUploadUrl(req.files.trailerUrl[0].filename)
+      ? req.files.trailerUrl[0].filename
       : body.trailerUrl || null;
     const videoUrl = req.files?.videoUrl?.[0]?.filename
-      ? getUploadUrl(req.files.videoUrl[0].filename)
+      ? req.files.videoUrl[0].filename
       : body.videoUrl || null;
 
     const categories =
@@ -185,7 +188,7 @@ export async function createMovie(req, res) {
     const attachFiles = (
       filesArrName,
       targetArr,
-      toFilename = (f) => getUploadUrl(f)
+      toFilename = (f) => f  // Store only filename, not full URL
     ) => {
       if (!req.files?.[filesArrName]) return;
       req.files[filesArrName].forEach((file, idx) => {
