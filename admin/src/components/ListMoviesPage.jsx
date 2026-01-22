@@ -5,12 +5,28 @@ import { Calendar, Clock, Film, Play, PlayIcon, Search, Star, Ticket, X } from "
 
 const API_BASE = "https://cinebharat-backend.onrender.com";
 function getImageUrl(maybe) {
-  // Convert filename, uploads/filename, or partial to a full uploads URL.
+  // Normalize any image-like value to a full HTTPS URL on the production backend.
+  // Handles:
+  // - Absolute localhost URLs -> replaced with API_BASE
+  // - Other absolute URLs -> returned as-is
+  // - Filenames or paths (e.g., "uploads/xyz.png" or "xyz.png") -> prefixed with API_BASE/uploads
   if (!maybe) return null;
   if (typeof maybe !== "string") return null;
-  if (maybe.startsWith("http://") || maybe.startsWith("https://")) return maybe;
-  // remove leading uploads/ if present
-  const cleaned = String(maybe).replace(/^uploads\//, "");
+
+  const s = String(maybe).trim();
+  if (!s) return null;
+
+  const isHttp = s.startsWith("http://") || s.startsWith("https://");
+  if (isHttp) {
+    // If it points to localhost, rewrite to production host
+    if (/https?:\/\/localhost:5000/i.test(s)) {
+      return s.replace(/https?:\/\/localhost:5000/i, API_BASE);
+    }
+    return s; // already absolute and not localhost
+  }
+
+  // Strip any leading slashes and leading "uploads/"
+  const cleaned = s.replace(/^\/+/, "").replace(/^uploads\//, "");
   return `${API_BASE}/uploads/${cleaned}`;
 }
 
