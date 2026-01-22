@@ -3,11 +3,20 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
 
 // Configure Cloudinary with credentials from environment variables
-cloudinary.config({
+const cloudConfig = {
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
+};
+
+// Log configuration status (without exposing secrets)
+console.log('Cloudinary Config:', {
+  cloud_name: cloudConfig.cloud_name ? '✓ Set' : '✗ Missing',
+  api_key: cloudConfig.api_key ? '✓ Set' : '✗ Missing',
+  api_secret: cloudConfig.api_secret ? '✓ Set' : '✗ Missing'
 });
+
+cloudinary.config(cloudConfig);
 
 // Configure Cloudinary storage for Multer
 const storage = new CloudinaryStorage({

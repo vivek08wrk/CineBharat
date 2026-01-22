@@ -280,9 +280,12 @@ export async function createMovie(req, res) {
     });
   } catch (error) {
     console.error("CreateMovie Error:", error);
+    console.error("Error details:", error.message);
+    console.error("Error stack:", error.stack);
     return res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: error.message || "Server Error",
+      error: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 }
