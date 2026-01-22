@@ -44,6 +44,30 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// TEMPORARY: Migration endpoint to fix localhost URLs in database
+// TODO: Remove this endpoint after running once in production
+app.get("/admin/migrate-urls", async (req, res) => {
+  try {
+    const { execSync } = await import('child_process');
+    const output = execSync('node migration/fixURLs.js', { 
+      cwd: process.cwd(),
+      encoding: 'utf8',
+      timeout: 60000 // 60 second timeout
+    });
+    res.json({ 
+      success: true, 
+      message: "Migration completed successfully",
+      output: output
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      output: error.stdout || error.stderr || ''
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server Started on http://localhost:${port}`);
 });
