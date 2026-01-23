@@ -41,6 +41,10 @@ app.get("/api/health", (req, res) => {
       api_key: process.env.CLOUDINARY_API_KEY ? "✓ Set" : "✗ Missing",
       api_secret: process.env.CLOUDINARY_API_SECRET ? "✓ Set" : "✗ Missing"
     },
+    environment: {
+      client_url: process.env.CLIENT_URL || "✗ Not Set",
+      stripe_configured: process.env.STRIPE_SECRET_KEY ? "✓ Set" : "✗ Missing"
+    },
     routes: {
       auth: "/api/auth (login, register)",
       movies: "/api/movies",
