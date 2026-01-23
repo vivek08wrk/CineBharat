@@ -16,22 +16,37 @@ console.log('Cloudinary Config:', {
   api_secret: cloudConfig.api_secret ? '✓ Set' : '✗ Missing'
 });
 
+// Check if all credentials are present
+const hasAllCredentials = cloudConfig.cloud_name && cloudConfig.api_key && cloudConfig.api_secret;
+
+if (!hasAllCredentials) {
+  console.warn('⚠️  WARNING: Cloudinary credentials are incomplete. File uploads will fail.');
+  console.warn('Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in environment variables.');
+}
+
 cloudinary.config(cloudConfig);
 
-// Configure Cloudinary storage for Multer
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'cinebharat', // Folder name in Cloudinary
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'], // Allowed image formats
-    transformation: [{ quality: 'auto', fetch_format: 'auto' }], // Optimize images
-    public_id: (req, file) => {
-      // Generate unique filename
-      const unique = Date.now() + '-' + Math.round(Math.random() * 1e5);
-      return `movie-${unique}`;
+let storage;
+try {
+  // Configure Cloudinary storage for Multer
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'cinebharat', // Folder name in Cloudinary
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'], // Allowed image formats
+      transformation: [{ quality: 'auto', fetch_format: 'auto' }], // Optimize images
+      public_id: (req, file) => {
+        // Generate unique filename
+        const unique = Date.now() + '-' + Math.round(Math.random() * 1e5);
+        return `movie-${unique}`;
+      }
     }
-  }
-});
+  });
+} catch (error) {
+  console.error('Failed to initialize Cloudinary storage:', error.message);
+  // Fallback to memory storage if Cloudinary fails
+  storage = multer.memoryStorage();
+}
 
 // Create multer upload instance with Cloudinary storage
 export const upload = multer({ 
