@@ -33,7 +33,7 @@ try {
     cloudinary: cloudinary,
     params: {
       folder: 'cinebharat', // Folder name in Cloudinary
-      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'], // Allowed image formats
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'bmp', 'svg'], // Allowed image formats
       transformation: [{ quality: 'auto', fetch_format: 'auto' }], // Optimize images
       public_id: (req, file) => {
         // Generate unique filename
