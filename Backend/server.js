@@ -36,6 +36,11 @@ app.get("/api/health", (req, res) => {
     status: "OK",
     message: "CineBharat Backend is running",
     timestamp: new Date().toISOString(),
+    cloudinary: {
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? "✓ Set" : "✗ Missing",
+      api_key: process.env.CLOUDINARY_API_KEY ? "✓ Set" : "✗ Missing",
+      api_secret: process.env.CLOUDINARY_API_SECRET ? "✓ Set" : "✗ Missing"
+    },
     routes: {
       auth: "/api/auth (login, register)",
       movies: "/api/movies",
