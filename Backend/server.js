@@ -49,6 +49,41 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Global error handler for multer and other errors
+app.use((error, req, res, next) => {
+  console.error('Global Error Handler:', error);
+  console.error('Error name:', error.name);
+  console.error('Error message:', error.message);
+  console.error('Error stack:', error.stack);
+  
+  // Handle Multer/Cloudinary specific errors
+  if (error.name === 'MulterError') {
+    return res.status(400).json({
+      success: false,
+      error: 'File upload error',
+      message: error.message,
+      code: error.code
+    });
+  }
+  
+  // Handle Cloudinary errors
+  if (error.message && error.message.includes('cloudinary')) {
+    return res.status(500).json({
+      success: false,
+      error: 'Image upload service error',
+      message: error.message
+    });
+  }
+  
+  // Generic error response
+  res.status(error.status || 500).json({
+    success: false,
+    error: error.name || 'Server Error',
+    message: error.message || 'An unexpected error occurred',
+    ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server Started on http://localhost:${port}`);
 });
