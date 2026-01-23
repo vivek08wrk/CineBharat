@@ -157,6 +157,10 @@ const normalizeItemForOutput = (it = {}) => {
 
 export async function createMovie(req, res) {
   try {
+    console.log('=== CREATE MOVIE START ===');
+    console.log('Request body keys:', Object.keys(req.body || {}));
+    console.log('Request files:', req.files ? Object.keys(req.files) : 'none');
+    
     const body = req.body || {};
 
     // With Cloudinary, files have a 'path' property containing the full URL
@@ -170,6 +174,8 @@ export async function createMovie(req, res) {
     const videoUrl = req.files?.videoUrl?.[0]?.path
       ? req.files.videoUrl[0].path
       : body.videoUrl || null;
+    
+    console.log('Poster URL:', posterUrl);
 
     const categories =
       safeParseJSON(body.categories) ||
