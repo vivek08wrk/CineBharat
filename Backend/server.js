@@ -10,6 +10,22 @@ import bookingRouter from "./Routes/bookingRouter.js";
 const app = express();
 const port = process.env.PORT || 5000;
 
+const url = `https://cinebharat-backend.onrender.com`;
+const interval = 30000;
+
+function reloadWebsite() {
+  axios
+    .get(url)
+    .then((response) => {
+      console.log("website reloded");
+    })
+    .catch((error) => {
+      console.error(`Error : ${error.message}`);
+    });
+}
+
+setInterval(reloadWebsite, interval);
+
 // MIDDLEWAREs
 
 app.use(cors());
